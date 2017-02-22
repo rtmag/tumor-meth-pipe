@@ -15,7 +15,7 @@ norm_dmr_table <-get.table(norm_dmr, comparison, "sites", return.data.frame=TRUE
 
 meth.norm<-meth(rnb.set.norm)
 
-x=which(norm_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(norm_dmr_table$mean.diff)>.15 )
+x=which(norm_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(norm_dmr_table$mean.diff)>.25 )
 
 meth.norm.sig=meth.norm[x,]
 
@@ -38,12 +38,38 @@ kras[kras=='WT']=3
 kras=as.numeric(kras)
 
 colores=c("white","red","black")
-clab=cbind(colores[tp53],colores[braf],colores[kras])
-colnames(clab)=c("TP53","BRAF","KRAS")
+##
+
+# stage
+stage=as.character(anno$ajcc_pathologic_tumor_stage)
+stage[grep("Stage IIA",stage)]="Stage II"
+stage[grep("Stage IIB",stage)]="Stage II"
+stage[grep("Stage IIC",stage)]="Stage II"
+stage[grep("Stage IVB",stage)]="Stage IV"
+stage[grep("Stage IIIA",stage)]="Stage III"
+col.stage=brewer.pal(8, "Set1")
+col.stage[1]="white"
+stage.names=names(table(stage))
+
+stage[stage=='[Not Available]']=1
+stage[stage=='Stage I']=2
+stage[stage=='Stage II']=3
+stage[stage=='Stage III']=4
+stage[stage=='Stage IIIB']=5
+stage[stage=='Stage IIIC']=6
+stage[stage=='Stage IV']=7
+stage[stage=='Stage IVA']=8
+
+stage=as.numeric(stage)
+##
+
+clab=cbind(colores[tp53],colores[braf],colores[kras],col.stage[stage])
+colnames(clab)=c("TP53","BRAF","KRAS","Stage")
+
+
+###
 
 colors <- colorRampPalette( (brewer.pal(9, "Blues")) )(255)
-cols=brewer.pal(3, "Set1")
-
 
 # set the custom distance and clustering functions
 hclustfunc <- function(x) hclust(x, method="complete")
@@ -52,5 +78,8 @@ distfunc <- function(x) dist(x, method="euclidean")
 #png("COAD_FDR-1_methDif-05.png")
 x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
             scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
-             ColSideColors=clab,Colv=F,dendrogram="both")
+             ColSideColors=clab,dendrogram="both")
+            
+legend("topright",legend=c("Normal","Mutant","Wild Type",stage.names),
+fill=c(colores,col.stage), border=FALSE, bty="n", y.intersp = 0.7, cex=0.7)
 #dev.off()
