@@ -15,7 +15,10 @@ norm_dmr_table <-get.table(norm_dmr, comparison, "sites", return.data.frame=TRUE
 
 meth.norm<-meth(rnb.set.norm)
 
-x=which(norm_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(norm_dmr_table$mean.diff)>.25 )
+#x=which(norm_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(norm_dmr_table$mean.diff)>.25 )
+
+x=order(norm_dmr_table$combinedRank)[1:30000]
+
 
 meth.norm.sig=meth.norm[x,]
 
