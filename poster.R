@@ -51,7 +51,7 @@ colnames(meth.norm.sig)=NULL
 rownames(meth.norm.sig)=NULL
 x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
             scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
-             ColSideColors=clab,Colv=T,dendrogram="none",lhei=c(2,4))
+             ColSideColors=clab,Colv=T,dendrogram="none",lhei=c(1,15))
             
 legend("topright",legend=c("Normal","Mutant","Wild Type"),
 fill=c(colores), border=T, bty="n", y.intersp = 0.7, cex=0.7)
