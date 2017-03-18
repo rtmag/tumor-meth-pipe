@@ -60,11 +60,11 @@ cols=brewer.pal(3, "Set1")
 hclustfunc <- function(x) hclust(x, method="complete")
 distfunc <- function(x) dist(x, method="euclidean")
 
-#png("COAD_FDR-1_methDif-05.png")
+tiff("COAD_FDR-1_methDif-05.tiff",res = 300)
 x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
             scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
              ColSideColors=clab,Colv=F,dendrogram="both")
-#dev.off()
+dev.off()
   
   
   
