@@ -442,7 +442,7 @@ heatmap.3 <- function(x,
             par(cex = 0.5)
             mtext(side = 2, "Count", line = 2)
         }
-        else title("Color Key")
+        else title("")
     }
     else plot.new()
     retval$colorTable <- data.frame(low = retval$breaks[-length(retval$breaks)],
