@@ -21,10 +21,6 @@ kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE
 
 meth.norm<-meth(rnb.set.norm)
 
-#x=(which(
-#            (tp53_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(tp53_dmr_table$mean.diff)>.15 ) | 
-#            (braf_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(braf_dmr_table$mean.diff)>.15 ) | 
-#            (kras_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(kras_dmr_table$mean.diff)>.15 ) ))
 x=which(  tp53_dmr_table$diffmeth.p.adj.fdr<0.01 & abs(tp53_dmr_table$mean.diff)>.05 )
 
 meth.norm.sig=meth.norm[x,]
@@ -36,21 +32,11 @@ tp53[tp53=='Mutant']=2
 tp53[tp53=='WT']=3
 tp53=as.numeric(tp53)
 
-braf=as.character(anno$braf_info)
-braf[braf=='Normal']=1
-braf[braf=='Mutant']=2
-braf[braf=='WT']=3
-braf=as.numeric(braf)
 
-kras=as.character(anno$kras_info)
-kras[kras=='Normal']=1
-kras[kras=='Mutant']=2
-kras[kras=='WT']=3
-kras=as.numeric(kras)
 
 colores=c("white","red","black")
-clab=cbind(colores[tp53],colores[braf],colores[kras])
-colnames(clab)=c("TP53","BRAF","KRAS")
+clab=cbind(colores[tp53])
+colnames(clab)=c("TP53")
 
 colors <- colorRampPalette( (brewer.pal(9, "Blues")) )(255)
 cols=brewer.pal(3, "Set1")
@@ -61,6 +47,13 @@ hclustfunc <- function(x) hclust(x, method="complete")
 distfunc <- function(x) dist(x, method="euclidean")
 
 #tiff("COAD_FDR-1_methDif-05.tiff",res = 300)
+colnames(meth.norm.sig)=NULL
+rownames(meth.norm.sig)=NULL
 x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
             scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
-             ColSideColors=clab,Colv=T,dendrogram="both")
+             ColSideColors=clab,Colv=T,dendrogram="both",ylab="",xlab="")
+            
+legend("topright",legend=c("Normal","Mutant","Wild Type"),
+fill=c(colores), border=T, bty="n", y.intersp = 0.7, cex=0.7)
+           
+dev.off()
