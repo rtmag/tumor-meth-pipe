@@ -45,15 +45,14 @@ cols=brewer.pal(3, "Set1")
 # set the custom distance and clustering functions
 hclustfunc <- function(x) hclust(x, method="complete")
 distfunc <- function(x) dist(x, method="euclidean")
-
-#tiff("COAD_FDR-1_methDif-05.tiff",res = 300)
+            
+tiff("COAD_FDR-1_methDif-05.tiff",width = 8, height = 7, units = "in", res = 1200)
 colnames(meth.norm.sig)=NULL
 rownames(meth.norm.sig)=NULL
 x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
             scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
-             ColSideColors=clab,Colv=T,dendrogram="none",lhei=c(1,15))
+             ColSideColors=clab,dendrogram="both",labRow=FALSE, labCol = FALSE)
             
-legend("topright",legend=c("Normal","Mutant","Wild Type"),
-fill=c(colores), border=T, bty="n", y.intersp = 0.7, cex=0.7)
+legend("topleft",legend=c("Normal","Mutant","Wild Type"),fill=c(colores), border=T, bty="n", y.intersp = 0.7, cex=0.7,inset=c(0,.15))
            
 dev.off()
