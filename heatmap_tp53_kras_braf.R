@@ -21,11 +21,12 @@ kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE
 
 meth.norm<-meth(rnb.set.norm)
 
-x=(which(
-            (tp53_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(tp53_dmr_table$mean.diff)>.15 ) | 
-            (braf_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(braf_dmr_table$mean.diff)>.15 ) | 
-            (kras_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(kras_dmr_table$mean.diff)>.15 ) ))
-
+#x=(which(
+#            (tp53_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(tp53_dmr_table$mean.diff)>.15 ) | 
+#            (braf_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(braf_dmr_table$mean.diff)>.15 ) | 
+#            (kras_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(kras_dmr_table$mean.diff)>.15 ) ))
+x=which(
+            tp53_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(tp53_dmr_table$mean.diff)>.15  )
 
 meth.norm.sig=meth.norm[x,]
 
