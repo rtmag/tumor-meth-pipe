@@ -7,17 +7,17 @@ rnb.set.norm@pheno=anno
 rnb.set.norm_noNormal=remove.samples(rnb.set.norm,samples(rnb.set.norm)[which(rnb.set.norm@pheno$tp53_info=="Normal")])
 
 tp53_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("tp53_info"))
-braf_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("braf_info"))
-kras_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("kras_info"))
+#braf_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("braf_info"))
+#kras_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("kras_info"))
 
 comparison <- get.comparisons(tp53_dmr)[1]
 tp53_dmr_table <-get.table(tp53_dmr, comparison, "sites", return.data.frame=TRUE)
 
-comparison <- get.comparisons(braf_dmr)[1]
-braf_dmr_table <-get.table(braf_dmr, comparison, "sites", return.data.frame=TRUE)
+#comparison <- get.comparisons(braf_dmr)[1]
+#braf_dmr_table <-get.table(braf_dmr, comparison, "sites", return.data.frame=TRUE)
 
-comparison <- get.comparisons(kras_dmr)[1]
-kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE)
+#comparison <- get.comparisons(kras_dmr)[1]
+#kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE)
 
 meth.norm<-meth(rnb.set.norm)
 
