@@ -7,17 +7,17 @@ rnb.set.norm@pheno=anno
 rnb.set.norm_noNormal=remove.samples(rnb.set.norm,samples(rnb.set.norm)[which(rnb.set.norm@pheno$tp53_info=="Normal")])
 
 tp53_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("tp53_info"))
-braf_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("braf_info"))
-kras_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("kras_info"))
+#braf_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("braf_info"))
+#kras_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("kras_info"))
 
 comparison <- get.comparisons(tp53_dmr)[1]
 tp53_dmr_table <-get.table(tp53_dmr, comparison, "sites", return.data.frame=TRUE)
 
-comparison <- get.comparisons(braf_dmr)[1]
-braf_dmr_table <-get.table(braf_dmr, comparison, "sites", return.data.frame=TRUE)
+#comparison <- get.comparisons(braf_dmr)[1]
+#braf_dmr_table <-get.table(braf_dmr, comparison, "sites", return.data.frame=TRUE)
 
-comparison <- get.comparisons(kras_dmr)[1]
-kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE)
+#comparison <- get.comparisons(kras_dmr)[1]
+#kras_dmr_table <-get.table(kras_dmr, comparison, "sites", return.data.frame=TRUE)
 
 meth.norm<-meth(rnb.set.norm)
 
@@ -61,10 +61,20 @@ hclustfunc <- function(x) hclust(x, method="complete")
 distfunc <- function(x) dist(x, method="euclidean")
 
 #tiff("COAD_FDR-1_methDif-05.tiff",res = 300)
-x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
-            scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
-             ColSideColors=clab,Colv=T,dendrogram="both")
+#x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
+#            scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
+#             ColSideColors=clab,Colv=T,dendrogram="both")
 #dev.off()
   
   
-  
+   
+tiff("COAD_FDR-1_methDif-05.tiff",width = 8, height = 7, units = "in", res = 1200)
+colnames(meth.norm.sig)=NULL
+rownames(meth.norm.sig)=NULL
+x=heatmap.3(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, 
+            scale="none", trace="none",cexCol=0.2,KeyValueName="Methylation Level",
+             ColSideColors=clab,dendrogram="both",labRow=FALSE, labCol = FALSE)
+            
+legend("topleft",legend=c("Normal","Mutant","Wild Type"),fill=c(colores), border=T, bty="n", y.intersp = 0.7, cex=0.7,inset=c(0,.15))
+           
+dev.off()
