@@ -1,4 +1,5 @@
 #taken from https://raw.githubusercontent.com/obigriffith/biostar-tutorials/master/Heatmaps/heatmap.3.R
+# source('https://raw.githubusercontent.com/rtmag/tumor-meth-pipe/master/heatmap3.R')
 
 heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
