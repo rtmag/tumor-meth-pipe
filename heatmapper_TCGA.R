@@ -96,20 +96,25 @@ c3 = names(cuty[cuty==3])
 c4 = names(cuty[cuty==4])
 
 anno_c1= annotation.table[rownames(annotation.table) %in% c1,c(1,2,2)]
-anno_c1[,2] = anno_c1[,2]-1
+anno_c1[,2] = anno_c1[,2]-150
+anno_c1[,3] = anno_c1[,3]+150
 
 anno_c2= annotation.table[rownames(annotation.table) %in% c2,c(1,2,2)]
-anno_c2[,2] = anno_c2[,2]-1
+anno_c2[,2] = anno_c2[,2]-150
+anno_c2[,3] = anno_c2[,3]+150
 
 anno_c3= annotation.table[rownames(annotation.table) %in% c3,c(1,2,2)]
-anno_c3[,2] = anno_c3[,2]-1
+anno_c3[,2] = anno_c3[,2]-150
+anno_c3[,3] = anno_c3[,3]+150
 
 anno_c4= annotation.table[rownames(annotation.table) %in% c4,c(1,2,2)]
-anno_c4[,2] = anno_c4[,2]-1
+anno_c4[,2] = anno_c4[,2]-150
+anno_c4[,3] = anno_c4[,3]+150
 
-write.table(anno_c1, "anno_cpg_c1.bed",sep="\t",quote=F,row.names=F,col.names=F)
-write.table(anno_c2, "anno_cpg_c2.bed",sep="\t",quote=F,row.names=F,col.names=F)
-write.table(anno_c3, "anno_cpg_c3.bed",sep="\t",quote=F,row.names=F,col.names=F)
-write.table(anno_c4, "anno_cpg_c4.bed",sep="\t",quote=F,row.names=F,col.names=F)
+
+write.table(anno_c1, "anno_cpg_c1+300.bed",sep="\t",quote=F,row.names=F,col.names=F)
+write.table(anno_c2, "anno_cpg_c2+300.bed",sep="\t",quote=F,row.names=F,col.names=F)
+write.table(anno_c3, "anno_cpg_c3+300.bed",sep="\t",quote=F,row.names=F,col.names=F)
+write.table(anno_c4, "anno_cpg_c4+300.bed",sep="\t",quote=F,row.names=F,col.names=F)
 
 
