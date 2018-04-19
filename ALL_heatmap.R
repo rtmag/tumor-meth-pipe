@@ -1,6 +1,6 @@
 suppressMessages(library(RnBeads))
 suppressMessages(library(RColorBrewer))
-
+suppressMessages(library(factoextra))
 rnb.set.norm=load.rnb.set("rnb.set.norm.RData.zip")
 rnb.set.norm_noNormal=remove.samples(rnb.set.norm,samples(rnb.set.norm)[which(rnb.set.norm@pheno$tp53_info=="Normal")])
 noNormal_dmr <- rnb.execute.computeDiffMeth(rnb.set.norm_noNormal,pheno.cols=c("tp53_info"))
@@ -10,29 +10,30 @@ noNormal_dmr_table <-get.table(noNormal_dmr, comparison, "sites", return.data.fr
 
 ################# thr FDR diffmeth
 meth.norm<-meth(rnb.set.norm)
-meth.norm.sig=meth.norm[noNormal_dmr_table$diffmeth.p.adj.fdr<0.01 & abs(noNormal_dmr_table[,3])>.05,]
-colnames(meth.norm.sig)<-rnb.set.norm@pheno$tp53_info
-colors <- colorRampPalette( (brewer.pal(9, "Blues")) )(255)
-cols=brewer.pal(3, "Set1")
+colnames(meth.norm) = as.character(rnb.set.norm@pheno$tp53_info)
+rownames(meth.norm) = rownames(rnb.set.norm@sites)
+#meth.mval = mval(rnb.set.norm)
+#rownames(meth.mval) = rownames(rnb.set.norm@sites)
+#colnames(meth.mval) = as.character(rnb.set.norm@pheno$tp53_info)
+meth.norm.sig=meth.norm[noNormal_dmr_table$diffmeth.p.adj.fdr<0.05 & abs(noNormal_dmr_table[,3])>.10,]
+saveRDS(meth.norm.sig,"meth.norm.sig.rds")
 
-# set the custom distance and clustering functions
-hclustfunc <- function(x) hclust(x, method="complete")
-distfunc <- function(x) dist(x, method="euclidean")
 
-# perform clustering on rows and columns (genes and samples)
-cl.row <- hclustfunc(distfunc(meth.norm.sig))
-gr.row <- cutree(cl.row, 2)
+options(scipen=999)
+library(gplots)
+library(factoextra)
+library(RColorBrewer)
+meth.norm.sig = readRDS("meth.norm.sig.rds")
 
-cl.col <- hclustfunc(distfunc(t(meth.norm.sig)))
-colOrder <- cl.col$labels
-colOrder[colOrder=="Mutant"]=1
-colOrder[colOrder=="WT"]=2
-colOrder[colOrder=="Normal"]=3
-colOrder=as.numeric(colOrder)
+track=colnames(meth.norm.sig)
+track[track=="Mutant"]=1
+track[track=="WT"]=2
+track[track=="Normal"]=3
+track=as.numeric(track)
 
-col1 <- c("brown","orange")
+colores=c("#db4e68","#497bd1","#d1c349")
+clab=as.character(colores[track])
 
-tiff(file = "TP53_wtVSmt_FDR-1_methDif-05.tiff", width = 3200, height = 3200, units = "px", res = 800) 
-x=heatmap.2(meth.norm.sig,col=colors, hclustfun=hclustfunc, distfun=distfunc, scale="none", trace="none",cexCol=0.2,ColSideColors=cols[colOrder],RowSideColors=col1[gr.ro
-w],lhei=c(2,4), lwid=c(2,3.5), keysize=0.75, key.par = list(cex=0.3))
-dev.off()
+colors <- rev(colorRampPalette( (brewer.pal(9, "RdBu")) )(20))
+x = heatmap.2(meth.norm.sig,col=colors,scale="none", trace="none",distfun = function(x) get_dist(x,method="pearson"),srtCol=90,
+labRow = FALSE,labCol = "",xlab="", ylab="CpGs",key.title="Methylation lvl",ColSideColors=clab)
