@@ -6,13 +6,11 @@ library(RColorBrewer)
 
 files = list.files(pattern="*.meth.norm.sig.rds")
 
-for(i in 1:length(files) ){
+for(i in 16:length(files) ){
 
 meth.norm.sig = readRDS(files[i])
 cancer = gsub(".meth.norm.sig.rds","",files[i])
 
-if (dim(meth.norm.sig)[1]<20) next
-  
 track=colnames(meth.norm.sig)
 track[track=="Mutant"]=1
 track[track=="WT"]=2
@@ -21,6 +19,12 @@ track=as.numeric(track)
 
 colores=c("#db4e68","#497bd1","#d1c349")
 clab=as.character(colores[track])
+  
+if (dim(meth.norm.sig)[1]<20) next
+if (dim(meth.norm.sig)[1]>15000) {
+   differences = rowMeans(meth.norm.sig[,track==2])-rowMeans(meth.norm.sig[,track==1])
+    meth.norm.sig = tail(meth.norm.sig[order(differences),],15000)
+  }
 
 colors <- rev(colorRampPalette( (brewer.pal(9, "RdBu")) )(20))
 tiffname = paste(cancer,".tiff",sep="")
@@ -38,3 +42,46 @@ p53_pattern=names(which((rowMeans(meth.norm.sig[,track==2])-rowMeans(meth.norm.s
 rdsname = paste(cancer,"_p53pattern.rds",sep="")
 saveRDS(p53_pattern,rdsname)
   }
+
+
+COAD = readRDS("COAD_p53pattern.rds")
+LUSC = readRDS("LUSC_p53pattern.rds")
+LUAD = readRDS("LUAD_p53pattern.rds")
+HNSC = readRDS("HNSC_p53pattern.rds")
+MESO = readRDS("MESO_p53pattern.rds")
+SARC = readRDS("SARC_p53pattern.rds")
+STAD = readRDS("STAD_p53pattern.rds")
+PAAD = readRDS("PAAD_p53pattern.rds")
+LAML = readRDS("LAML_p53pattern.rds")
+UCEC = readRDS("UCEC_p53pattern.rds")
+LIHC = readRDS("LIHC_p53pattern.rds")
+
+cgs = c(COAD,LUSC,LUAD,HNSC,MESO,SARC,STAD,PAAD,LAML,UCEC,LIHC)
+cgs = unique(cgs)
+
+cpg = matrix(0L, nrow = length(cgs), ncol = 11)
+rownames(cpg) = cgs
+colnames(cpg) = c("COAD","LUSC","LUAD","HNSC","MESO","SARC","STAD","PAAD","LAML","UCEC","LIHC")
+cpg[rownames(cpg) %in% COAD, "COAD"] = 1
+cpg[rownames(cpg) %in% LUSC, "LUSC"] = 1
+cpg[rownames(cpg) %in% LUAD, "LUAD"] = 1
+cpg[rownames(cpg) %in% HNSC, "HNSC"] = 1
+cpg[rownames(cpg) %in% MESO, "MESO"] = 1
+cpg[rownames(cpg) %in% SARC, "SARC"] = 1
+cpg[rownames(cpg) %in% STAD, "STAD"] = 1
+cpg[rownames(cpg) %in% PAAD, "PAAD"] = 1
+cpg[rownames(cpg) %in% LAML, "LAML"] = 1
+cpg[rownames(cpg) %in% UCEC, "UCEC"] = 1
+cpg[rownames(cpg) %in% LIHC, "LIHC"] = 1
+
+cpg = cpg[rowSums(cpg)>1,]
+x = heatmap.2(cpg,scale="none", trace="none",distfun = function(x) get_dist(x,method="pearson"),srtCol=90,
+labRow = FALSE,xlab="", ylab="CpGs",key.title="CpG")
+
+cuty=cutree(as.hclust(x$rowDendrogram),k=4)
+rlab=c("#ffb3ba","#ffdfba","#baffc9","#bae1ff")[cuty]
+
+tiff(file = 'CpG_heatmap.tiff', width = 3200, height = 3200, units = "px", res = 800)
+x = heatmap.2(cpg,scale="none", trace="none",distfun = function(x) get_dist(x,method="pearson"),srtCol=90,
+labRow = FALSE,xlab="", ylab="CpGs",key.title="CpG",RowSideColors=rlab)
+dev.off()
