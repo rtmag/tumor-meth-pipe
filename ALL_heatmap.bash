@@ -6,9 +6,10 @@ do pathy=${i//\/rnb.set.norm.RData.zip/};
 cancer=${pathy//\.\.\/preprocessing\_tp53\//};
 echo $pathy;
 cd $pathy ;
-  Rscript /root/TCGA/TCGA/scripts/ >> /root/TCGA/TCGA/logs/tp53_HEATMAP_20-apr-2018.log ; 
+  Rscript /root/TCGA/TCGA/scripts/all_heatmap.R >> /root/TCGA/TCGA/logs/tp53_HEATMAP_20-apr-2018.log ; 
+  new_name="/root/TCGA/TCGA/matrix/$cancer.meth.norm.sig.rds"
+  mv meth.norm.sig.rds $new_name
 cd ../../scripts/ ;
 done
 
 
-/root/TCGA/TCGA/matrix/
