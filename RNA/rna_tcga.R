@@ -8,7 +8,6 @@ library(gplots)
 library(factoextra)
 library(RColorBrewer)
 library("xlsx")
-library(beeswarm)
 
 rna_samples = read.table("sample.txt",sep='\t')
 rna_samples = cbind(rna_samples,rna_samples)
